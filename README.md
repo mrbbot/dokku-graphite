@@ -114,9 +114,11 @@ dokku graphite:link lolipop playground
 # and the following will be set on the linked application by default
 #
 #   STATSD_URL=statsd://dokku-graphite-lolipop:8125
+#   JDBC_STATSD_URL=statsd://dokku-graphite-lolipop:8125?user=&password=
 #
 # NOTE: the host exposed here only works internally in docker containers. If
 # you want your container to be reachable from outside, you should use `expose`.
+# As well, we shall omit the JDBC url from all following examples for brevity.
 
 # another service can be linked to your app
 dokku graphite:link other_service playground
