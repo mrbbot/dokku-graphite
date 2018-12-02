@@ -95,7 +95,6 @@ service_import() {
 service_start() {
   local SERVICE="$1"
   local QUIET="$2"
-  local SERVICE_ROOT="$PLUGIN_DATA_ROOT/$SERVICE"
   local SERVICE_NAME="$(get_service_name "$SERVICE")"
   local ID=$(docker ps -f status=running --no-trunc | grep -e "$SERVICE_NAME$" | awk '{print $1}') || true
   if [[ -n $ID ]]; then
@@ -105,7 +104,7 @@ service_start() {
 
   dokku_log_info2_quiet "Starting container"
   local PREVIOUS_ID=$(docker ps -f status=exited --no-trunc | grep -e "$SERVICE_NAME$" | awk '{print $1}') || true
-  local PASSWORD="$(cat "$SERVICE_ROOT/PASSWORD")"
+  local PASSWORD="$(service_password "$SERVICE")"
 
   if [[ -n $PREVIOUS_ID ]]; then
     docker start "$PREVIOUS_ID" > /dev/null
@@ -116,10 +115,4 @@ service_start() {
   else
     dokku_log_verbose_quiet "Neither container nor valid configuration exists for $SERVICE"
   fi
-}
-
-service_url() {
-  local SERVICE="$1"
-  local SERVICE_DNS_HOSTNAME="$(service_dns_hostname "$SERVICE")"
-  echo "$PLUGIN_SCHEME://$SERVICE_DNS_HOSTNAME:${PLUGIN_DATASTORE_PORTS[0]}"
 }
