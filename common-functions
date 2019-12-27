@@ -7,7 +7,11 @@ docker_ports_options() {
   declare desc="Exports a list of exposed ports"
   declare PORTS=("$@")
   for ((i = 0; i < ${#PLUGIN_DATASTORE_PORTS[@]}; i++)); do
-    echo -n "-p ${PORTS[i]}:${PLUGIN_DATASTORE_PORTS[i]} "
+    if [[ "${PLUGIN_DATASTORE_PORTS[i]}" = "8125" ]]; then
+      echo -n "-p ${PORTS[i]}:${PLUGIN_DATASTORE_PORTS[i]}/udp "
+    else
+      echo -n "-p ${PORTS[i]}:${PLUGIN_DATASTORE_PORTS[i]} "
+    fi
   done
 }
 
